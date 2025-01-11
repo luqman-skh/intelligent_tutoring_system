@@ -1,18 +1,113 @@
+/* General app styling */
 .App {
   text-align: center;
   font-family: Arial, sans-serif;
+  display: flex;
+  height: 100%; /* Full height to ensure the sidebar sticks to the side */
 }
 
+/* Sidebar styling */
+.sidebar {
+  width: 250px;
+  background-color: #f4f4f4;
+  height: 100vh; /* Make sidebar take full height */
+  position: fixed; /* Fix sidebar to the left side */
+  top: 0;
+  left: 0;
+  padding: 20px;
+  box-sizing: border-box;
+  color: black
+}
+
+.chat-box-holder {
+  padding: 12px;
+  position: fixed; /* Fix the container to the bottom */
+  bottom: 0; /* Align it to the bottom of the screen */
+  left: 250px; /* Account for the sidebar width */
+  right: 80px; /* Extend it to the right edge */
+  background-color: #282c34; /* Optional background color */
+  box-sizing: border-box; /* Ensure padding doesn't affect width */
+}
+
+.chat-input-textarea {
+  background-color: #40414f;
+  width: 100%;
+  border-radius: 5px;
+  border: none;
+  border-color: none;
+  padding: 10px; /* Add padding for better usability */
+  color: white; /* Adjust text color for better visibility */
+  resize: none; /* Prevent resizing */
+  height: 50px; /* Set a fixed height */
+}
+
+.chat-log {
+  flex-grow: 1; /* Take remaining space */
+  color: white;
+  overflow-y: auto; /* Enable scrolling if needed */
+  box-sizing: border-box; /* Ensure padding doesn't affect width */
+  width: 100%; /* Full width */
+  text-align: left; /* Align text to the left */
+}
+
+.chat-message {
+  background-color: rgba(255, 255, 255, 0.1);
+  margin-bottom: 10px; /* Add spacing between messages */
+}
+
+/* .avatar{
+  background: white;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+} */
+
+
+
+.text-container {
+  overflow-y: auto; /* Enables vertical scrolling for large text */
+  max-height: 400px; /* Set a maximum height for the text container */
+  padding-left: 70px; /* Ensure text doesn't overlap the avatar */
+}
+
+
+/* 
+.avatar-llama {
+  background: #0884fb;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+} */
+
+.chat-message-center {
+  padding: 12px;
+  display: inline-flex;
+  padding-left: 24px;
+  padding-right: 24px;
+  max-width: 90%;
+  margin-left: auto;
+  margin-right: auto ;
+
+}
+.message{
+  
+  padding-left: 40px;
+  padding-right: 40px;
+
+}
+/* Header styling */
 .App-header {
   background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
   color: white;
+  padding: 20px;
+  padding-left: 270px;
+  flex-shrink: 0; /* Prevent shrinking */
+  text-align: left;
+  width: 100%; /* Full width */
+  box-sizing: border-box;
 }
 
+/* Button styling */
 button {
   background-color: #61dafb;
   color: black;
@@ -29,6 +124,7 @@ button:disabled {
   cursor: not-allowed;
 }
 
+/* Quiz container styling */
 .quiz-container {
   margin-top: 20px;
   text-align: left;
@@ -40,6 +136,7 @@ button:disabled {
   text-align: center;
 }
 
+/* Error message styling */
 .error {
   color: red;
   margin-top: 20px;
