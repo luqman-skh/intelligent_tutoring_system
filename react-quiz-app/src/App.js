@@ -188,37 +188,20 @@ function App() {
           <h2>What would you want to learn about today?</h2>
           <div className="topics-container">
             <div className="row g-4">
-
-              {/* {topics.map((chapter) => (
-                <button
-                  key={chapter}
-                  onClick={() => fetchTopicInfo(chapter)}
-                  disabled={loadingTopic}
-                >
-                  {loadingTopic ? `Loading ${chapter}...` : chapter}
-                </button>
-              ))} */}
-
-              {topics.map((topic) => {
-                return (
-                  <div
-                    key={topic.id}
-                    className="col-lg-4 col-md-6 col-sm-12"
-                  >
-                    {topic.subtopics.map((subtopic) => {
-                      return (
-                        <button
-                          key={subtopic.id}
-                          onClick={() => fetchTopicInfo(subtopic.name)}
-                          disabled={loadingTopic}
-                        >
-                          {loadingTopic ? `Loading ${subtopic.name}...` : subtopic.name}
-                        </button>
-                      );
-                    })}
-                  </div>
-                );
-              })}
+              {topics.map((topic) => (
+                <div key={topic.id} className="col-lg-4 col-md-4 col-sm-12 topic-box">
+                  <h3>{topic.name}</h3>
+                  <ul>
+                    {topic.subtopics.map((subtopic) => (
+                      <li key={subtopic.id}>
+                        <a href="#" onClick={() => fetchTopicInfo(subtopic.name)}>
+                          {subtopic.name}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
             </div>
           </div>
 
@@ -231,6 +214,8 @@ function App() {
 
           {errorTopic && <p className="error">{errorTopic}</p>}
         </section>
+
+
       </header>
     </div>
   );
