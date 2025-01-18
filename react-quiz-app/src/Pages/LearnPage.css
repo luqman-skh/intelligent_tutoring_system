@@ -1,0 +1,53 @@
+/* Ensure all cards have the same size */
+.card-blurred {
+    height: 300px; /* Set a fixed height */
+    border-radius: 10px;
+    overflow: hidden;
+    background-size: cover; /* Ensure the image covers the card */
+    background-position: center;
+    display: flex;
+    border-width: 0;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+/* Overlay to add blur effect */
+.card-blurred::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5); /* Dark overlay */
+    backdrop-filter: blur(5px); /* Apply blur */
+    z-index: 1;
+}
+
+/* Text content */
+.card-blurred .card-body {
+    z-index: 2; /* Ensure text is above the overlay */
+    text-align: center;
+}
+
+/* Ensure all cards are visually consistent */
+.card-blurred .card-title {
+    font-size: 1.25rem;
+    height: 40px;
+    padding: 10px;
+    border-radius: 5px;
+    font-weight: bold;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+.card-blurred .card-subtitle {
+    font-size: 1rem;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+/* Style for the button */
+.card-blurred .btn-light {
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}

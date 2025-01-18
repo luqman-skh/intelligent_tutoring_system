@@ -3,6 +3,7 @@ import AskAnything from '../components/AskAnything'
 import QuizGenerator from '../components/QuizGenerator'
 import LessonOverview from '../components/LessonOverview'
 import { useNavigate } from 'react-router-dom'
+import Navbar from '../components/Navbar'
 
 function HomePage() {
 

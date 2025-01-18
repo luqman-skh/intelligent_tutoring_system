@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-function Chatbox() {
+const Chatbox = ({ lessonId, subtopicId }) => {
+    const [content, setContent] = useState('');
     const [input, setInput] = useState("");
     const [chatLog, setChatLog] = useState([
         {
@@ -58,9 +59,20 @@ function Chatbox() {
         setInput(""); // Clear input field
     };
 
+    useEffect(() => {
+        if (lessonId && subtopicId) {
+          setContent(`Displaying content for Lesson ID: ${lessonId}, Subtopic ID: ${subtopicId}`);
+        } else if (lessonId) {
+          setContent(`Displaying content for Lesson ID: ${lessonId}`);
+        } else {
+          setContent('Please select a lesson and subtopic.');
+        }
+      }, [lessonId, subtopicId]);
+
     return (
         <section className="chatbox">
             <div className="chat-log">
+            {console.log(content)}
                 {chatLog.map((chat, index) =>
                     chat.user === "me" ? (
                         <ChatMessage key={index} message={chat} />
@@ -72,7 +84,6 @@ function Chatbox() {
             <div className="chat-box-holder">
                 <form onSubmit={handleSubmit}>
                     <input
-                        row="1"
                         className="chat-input-textarea"
                         value={input}
                         onChange={(e) => setInput(e.target.value)}

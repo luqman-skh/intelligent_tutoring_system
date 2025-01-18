@@ -4,92 +4,73 @@ import { useNavigate } from 'react-router-dom';
 
 function LessonOverview() {
 
-    const [topicResponse, setTopicResponse] = useState("");
-    const [loadingTopic, setLoadingTopic] = useState(false);
-    const [errorTopic, setErrorTopic] = useState("");
+    const [unitResponse, setUnitResponse] = useState("");
+    const [loadingUnit, setLoadingUnit] = useState(false);
+    const [errorUnit, setErrorUnit] = useState("");
 
     const navigate = useNavigate();
 
-    const handleNavigate = () => {
-        navigate("/Lesson"); // Navigate to the LessonContent page
-    };
 
     // API endpoints
     const ASK_API_URL = "https://b76b-34-105-126-138.ngrok-free.app/ask_anything";
 
-    // Topics for learning
-    const topics = [
+    // Units for learning
+    const units = [
         {
             id: 1, name: "Unit 1",
-            subtopics: [
-                { id: 101, name: "The Environment", },
-                { id: 102, name: "Biology ", },
-                { id: 103, name: "Cells", }
+            topics: [
+                { id: 1, name: "The Environment", },
+                { id: 2, name: "Biology ", },
+                { id: 3, name: "Cells", }
             ]
         },
         {
             id: 2, name: "Unit 2",
-            subtopics: [
-                { id: 201, name: "Green Plants", },
-                { id: 202, name: "Soil and Nutrients", },
-                { id: 203, name: "Groups of Living Things Classification", }
+            topics: [
+                { id: 4, name: "Green Plants", },
+                { id: 5, name: "Soil and Nutrients", },
+                { id: 6, name: "Cell Division", },
+                { id: 7, name: "Groups of Living Things", },
+                { id: 8, name: "Other Types of Living Organisms", }
             ]
         },
         {
             id: 3, name: "Unit 3",
-            subtopics: [
-                { id: 301, name: "The Digestive System ", },
-                { id: 302, name: "The Circulatory System", },
-                { id: 303, name: "The Respiratory System ", }
+            topics: [
+                { id: 9, name: "The Digestive System ", },
+                { id: 10, name: "The Circulatory System", },
+                { id: 11, name: "The Respiratory System ", },
+                { id: 12, name: "The Excretory System ", }
             ]
         }
     ];
 
-
-    // Function to handle topic click
-    const fetchTopicInfo = async (chapter) => {
-        setLoadingTopic(true);
-        setErrorTopic("");
-        setTopicResponse("");
-        try {
-            const response = await axios.post(
-                ASK_API_URL,
-                { topic: `Explain in detail what is ${chapter}` },
-                {
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                }
-            );
-            if (response.data && response.data.response) {
-                setTopicResponse(response.data.response);
-            } else {
-                setErrorTopic("Unexpected response structure from the server.");
-            }
-        } catch (err) {
-            console.error("Error fetching topic info:", err.response || err.message);
-            setErrorTopic("Failed to fetch topic information. Please try again.");
-        } finally {
-            setLoadingTopic(false);
-        }
+    const fetchUnitInfo = (lessonId) => {
+        navigate('/Lesson', { state: {lessonId}});
     };
 
 
     return (
         <div>
-            {/* Topic Learning Section */}
+            {/* Unit Learning Section */}
             <section>
                 <h2>What would you want to learn about today?</h2>
-                <div className="topics-container">
+                <div className="lessons-container">
                     <div className="row g-4">
-                        {topics.map((topic) => (
-                            <div key={topic.id} className="col-lg-4 col-md-4 col-sm-12 topic-box">
-                                <h3>{topic.name}</h3>
+                        {units.map((unit) => (
+                            <div key={unit.id} className="col-lg-4 col-md-4 col-sm-12 lesson-box">
+                                <h3>{unit.name}</h3>
                                 <ul>
-                                    {topic.subtopics.map((subtopic) => (
-                                        <li key={subtopic.id}>
-                                            <a href="/Lesson" onClick={() => fetchTopicInfo(subtopic.name)}>
-                                                {subtopic.name}
+                                    {unit.topics.map((topic) => (
+                                        <li key={topic.id}>
+                                            <a
+                                                href="#"
+                                                onClick={(e) => {
+                                                    e.preventDefault();
+                                                    fetchUnitInfo(topic.id);
+                                                }}
+                                            >
+                                                {topic.name}
                                             </a>
                                         </li>
                                     ))}
@@ -99,14 +80,14 @@ function LessonOverview() {
                     </div>
                 </div>
 
-                {topicResponse && (
-                    <div className="topic-response-container">
-                        <h3>Topic Information:</h3>
-                        <p>{topicResponse}</p>
+                {unitResponse && (
+                    <div className="unit-response-container">
+                        <h3>Unit Information:</h3>
+                        <p>{unitResponse}</p>
                     </div>
                 )}
 
-                {errorTopic && <p className="error">{errorTopic}</p>}
+                {errorUnit && <p className="error">{errorUnit}</p>}
             </section>
         </div>
     )

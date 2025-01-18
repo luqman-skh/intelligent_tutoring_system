@@ -7,12 +7,14 @@
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
     height: 100vh;
     position: fixed;
+    top: 0;
+    left: 0;
   }
   
   /* Sidebar title */
   .sidebar h2 {
     font-size: 1.5rem;
-    color: #343a40;
+    color: #282c34;
     margin-bottom: 1rem;
     text-align: center;
     font-weight: 600;
@@ -25,6 +27,10 @@
     list-style: none;
     padding: 0;
   }
+
+  .take-quiz {
+    border-radius: 5px;
+  }
   
   /* Navigation list items */
   .sidebar nav ul li {
@@ -35,7 +41,7 @@
   .sidebar nav ul li a {
     text-decoration: none;
     font-size: 1rem;
-    color: #007bff;
+    color: #282c34;
     padding: 10px 15px;
     display: block;
     border-radius: 5px;
@@ -44,12 +50,12 @@
   
   /* Hover and active states for links */
   .sidebar nav ul li a:hover {
-    background-color: #007bff;
+    background-color: #282c34;
     color: #fff;
   }
   
   .sidebar nav ul li a:active {
-    background-color: #0056b3;
+    background-color: #0e0e0f;
     color: #fff;
   }
   
