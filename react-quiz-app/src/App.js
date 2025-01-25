@@ -11,8 +11,13 @@ import Navbar from "./components/Navbar";
 import { initializeApp } from "firebase/app";
 import { useNavigate } from "react-router-dom";
 import Quiz from "./components/Quiz";
+import { UserContext } from "./components/Firebase/UserContext";
 import LearnPage from "./Pages/LearnPage";
 import FetchTest from "./components/FetchTest";
+import { UserProvider } from "./components/Firebase/UserContext";
+import QuizResult from "./components/QuizResult";
+import ReviseTest from "./components/ReviseTest";
+import ProfilePage from "./Pages/ProfilePage";
 
 import {
   getAuth,
@@ -20,7 +25,6 @@ import {
   GoogleAuthProvider,
   signOut,
 } from "firebase/auth";
-
 
 const firebaseConfig = {
   apiKey: "AIzaSyAT2KHPIlH2AUZvtiiU1AZYMpAXXViFuak",
@@ -34,8 +38,6 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
-
-
 
 function App() {
   const [topicResponse, setTopicResponse] = useState("");
@@ -60,8 +62,9 @@ function App() {
   };
 
   return (
-    <Router>
-      <Navbar />
+    <UserProvider>
+      <Router>
+        <Navbar />
         <header className="App-header">
           <Routes>
             <Route path="/" element={<HomePage />} />
@@ -69,9 +72,13 @@ function App() {
             <Route path="/Quiz" element={<Quiz />} />
             <Route path="/fetch" element={<FetchTest />} />
             <Route path="/learn" element={<LearnPage />} />
+            <Route path="/result" element={<QuizResult />} />
+            <Route path="/reviseTest" element={<ReviseTest />} />
+            <Route path="/profile" element={<ProfilePage />} />
           </Routes>
         </header>
-    </Router>
+      </Router>
+    </UserProvider>
   );
 }
 

@@ -4,12 +4,13 @@ import { useNavigate } from 'react-router-dom';
 import './LearnPage.css'; // Import custom styles for blurred backgrounds
 
 function LearnPage() {
-
     const navigate = useNavigate();
+
     // Units for learning
     const units = [
         {
-            id: 1, name: "Unit 1",
+            id: 1,
+            name: "Unit 1",
             topics: [
                 { id: 1, name: "The Environment", image: "environment.jpg" },
                 { id: 2, name: "Biology", image: "biology.jpg" },
@@ -17,7 +18,8 @@ function LearnPage() {
             ]
         },
         {
-            id: 2, name: "Unit 2",
+            id: 2,
+            name: "Unit 2",
             topics: [
                 { id: 4, name: "Green Plants", image: "plants.jpg" },
                 { id: 5, name: "Soil and Nutrients", image: "soil.jpg" },
@@ -27,7 +29,8 @@ function LearnPage() {
             ]
         },
         {
-            id: 3, name: "Unit 3",
+            id: 3,
+            name: "Unit 3",
             topics: [
                 { id: 9, name: "The Digestive System", image: "digestive.jpg" },
                 { id: 10, name: "The Circulatory System", image: "circulatory.jpg" },
@@ -37,8 +40,16 @@ function LearnPage() {
         }
     ];
 
+    // Function to navigate to a specific lesson
     const fetchUnitInfo = (lessonId) => {
         navigate('/Lesson', { state: { lessonId } });
+    };
+
+    // Function to navigate to the quiz for a specific unit
+    const handleTakeQuiz = (topics) => {
+        const topicIds = topics.map((topic) => topic.id); // Extract topic IDs
+        console.log(typeof(topicIds))
+        navigate('/ReviseTest', { state: { topicIds } }); // Pass topic IDs as state
     };
 
     return (
@@ -58,16 +69,27 @@ function LearnPage() {
                             >
                                 <div className="card-body text-white d-flex flex-column justify-content-center align-items-center">
                                     <h5 className="card-title">{topic.name}</h5>
-                                    <button href="#"
+                                    <button
                                         onClick={(e) => {
                                             e.preventDefault();
                                             fetchUnitInfo(topic.id);
                                         }}
                                         className="btn btn-light mt-3"
-                                    >Learn Now</button>
+                                    >
+                                        Learn Now
+                                    </button>
                                 </div>
                             </div>
                         ))}
+                        {/* Add Take Unit Quiz Button */}
+                        <div className="text-center mt-3">
+                            <button
+                                onClick={() => handleTakeQuiz(unit.topics)}
+                                className="btn btn-primary"
+                            >
+                                Take Unit Quiz
+                            </button>
+                        </div>
                     </div>
                 ))}
             </div>
