@@ -13,11 +13,15 @@ import { useNavigate } from "react-router-dom";
 import Quiz from "./components/Quiz";
 import { UserContext } from "./components/Firebase/UserContext";
 import LearnPage from "./Pages/LearnPage";
+import Signup from "./Pages/Signup-login";
+import LandingPage from "./Pages/LandingPage";
 import FetchTest from "./components/FetchTest";
 import { UserProvider } from "./components/Firebase/UserContext";
 import QuizResult from "./components/QuizResult";
 import ReviseTest from "./components/ReviseTest";
 import ProfilePage from "./Pages/ProfilePage";
+import Tutor from "./components/Tutor";
+import Test from "./Pages/test";
 
 import {
   getAuth,
@@ -25,6 +29,7 @@ import {
   GoogleAuthProvider,
   signOut,
 } from "firebase/auth";
+import AskAnything from "./components/AskAnything";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAT2KHPIlH2AUZvtiiU1AZYMpAXXViFuak",
@@ -67,14 +72,16 @@ function App() {
         <Navbar />
         <header className="App-header">
           <Routes>
-            <Route path="/" element={<HomePage />} />
+            <Route path="/" element={<LandingPage />} />
             <Route path="/Lesson" element={<LessonContent />} />
             <Route path="/Quiz" element={<Quiz />} />
             <Route path="/fetch" element={<FetchTest />} />
             <Route path="/learn" element={<LearnPage />} />
             <Route path="/result" element={<QuizResult />} />
+            <Route path="/ask" element={<Tutor />} />
             <Route path="/reviseTest" element={<ReviseTest />} />
             <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/signup" element={<Signup />} />
           </Routes>
         </header>
       </Router>

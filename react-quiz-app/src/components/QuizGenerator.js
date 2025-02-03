@@ -8,7 +8,7 @@ function QuizGenerator() {
     const [loadingTopic, setLoadingTopic] = useState(false);
     const [loadingQuiz, setLoadingQuiz] = useState(false);
 
-    const QUIZ_API_URL = "https://98cd-34-16-142-13.ngrok-free.app/generate_quiz";
+    const QUIZ_API_URL = `${process.env.REACT_APP_BACKEND_API_KEY}/generate_quiz`;
 
 
     // Function to fetch the quiz

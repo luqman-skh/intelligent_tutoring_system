@@ -1,53 +1,50 @@
-/* Ensure all cards have the same size */
-.card-blurred {
-    height: 300px; /* Set a fixed height */
-    border-radius: 10px;
-    overflow: hidden;
-    background-size: cover; /* Ensure the image covers the card */
-    background-position: center;
+/* LearnPage.css */
+.card {
+    height: 200px; /* Adjust the height as needed */
     display: flex;
-    border-width: 0;
-    justify-content: center;
-    align-items: center;
-    position: relative;
+    flex-direction: column;
 }
 
-/* Overlay to add blur effect */
-.card-blurred::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5); /* Dark overlay */
-    backdrop-filter: blur(5px); /* Apply blur */
-    z-index: 1;
+.card-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
-/* Text content */
-.card-blurred .card-body {
-    z-index: 2; /* Ensure text is above the overlay */
-    text-align: center;
+.card-body h5 {
+    margin-bottom: 1rem;
 }
 
-/* Ensure all cards are visually consistent */
-.card-blurred .card-title {
-    font-size: 1.25rem;
-    height: 40px;
-    padding: 10px;
-    border-radius: 5px;
-    font-weight: bold;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+.card-body p {
+    flex: 1;
 }
 
-.card-blurred .card-subtitle {
-    font-size: 1rem;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+.card-body button {
+    margin-top: auto;
 }
 
-/* Style for the button */
-.card-blurred .btn-light {
-    border: 1px solid rgba(255, 255, 255, 0.8);
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+.revision-section {
+    height: 200px; /* Adjust the height as needed */
+    display: flex;
+    flex-direction: column;
+    border-radius: 8px;
+}
+
+.revision-section .card {
+    background-color: #54c66b; /* Light purple background */
+}
+
+.revision-section .text-purple {
+    color: #8b5cf6; /* Purple text color */
+}
+
+.revision-section .btn-primary {
+    background-color: #3b82f6; /* Blue button color */
+    border-color: #3b82f6;
+}
+
+.revision-section .btn-primary:hover {
+    background-color: #2563eb; /* Darker blue on hover */
+    border-color: #2563eb;
 }

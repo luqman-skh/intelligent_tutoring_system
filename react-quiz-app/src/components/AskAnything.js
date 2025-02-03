@@ -1,5 +1,6 @@
-import React, { useState} from 'react'
+import React, { useState } from 'react';
 import axios from "axios";
+import './Tutor.css'; // Make sure to import the CSS file
 
 function AskAnything() {
     const [loadingAsk, setLoadingAsk] = useState(false);
@@ -7,7 +8,8 @@ function AskAnything() {
     const [askResponse, setAskResponse] = useState("");
     const [question, setQuestion] = useState("");
 
-    const ASK_API_URL = "https://b76b-34-105-126-138.ngrok-free.app/ask_anything";
+    // const ASK_API_URL = "https://a29c-34-125-203-212.ngrok-free.app/ask_anything";
+    const ASK_API_URL = `${process.env.REACT_APP_BACKEND_API_KEY}/ask_anything`;
 
     // Function to handle "Ask Anything"
     const askAnything = async () => {
@@ -29,6 +31,7 @@ function AskAnything() {
                     },
                 }
             );
+            console.log(response.data);
             if (response.data && response.data.response) {
                 setAskResponse(response.data.response);
             } else {
@@ -41,8 +44,9 @@ function AskAnything() {
             setLoadingAsk(false);
         }
     };
+
     return (
-        <div>
+        <div className="ask-anything-container">
             {/* Ask Anything Section */}
             <section>
                 <h2>Ask Anything</h2>
@@ -61,14 +65,14 @@ function AskAnything() {
                 {askResponse && (
                     <div className="ask-response-container">
                         <h3>Answer:</h3>
-                        <p>{askResponse}</p>
+                        <div dangerouslySetInnerHTML={{ __html: askResponse }} />
                     </div>
                 )}
 
                 {errorAsk && <p className="error">{errorAsk}</p>}
             </section>
         </div>
-    )
+    );
 }
 
-export default AskAnything
+export default AskAnything;

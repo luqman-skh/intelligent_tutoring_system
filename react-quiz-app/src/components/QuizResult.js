@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useLocation, useNavigate } from 'react-router-dom';
+import './QuizResult.css'; // Make sure to import the CSS file
 
 const QuizResult = () => {
-    const ASK_API_URL = "https://e1a4-34-124-165-147.ngrok-free.app/quiz_explanation";
+    const QUIZ_EXPLAIN_API_URL = `${process.env.REACT_APP_BACKEND_API_KEY}/quiz_explanation`;
     const location = useLocation();
     const navigate = useNavigate();
     const { incorrectAnswers, score, totalQuestions, lessonId } = location.state || {};
-
     const [explanations, setExplanations] = useState({});
     const [loadingIndex, setLoadingIndex] = useState(null);
     const [error, setError] = useState(null);
@@ -33,7 +33,7 @@ const QuizResult = () => {
             };
 
             const response = await axios.post(
-                ASK_API_URL,
+                QUIZ_EXPLAIN_API_URL,
                 transformedData,
                 { headers: { "Content-Type": "application/json" } }
             );
@@ -56,59 +56,47 @@ const QuizResult = () => {
     const passThreshold = totalQuestions > 0 ? Math.ceil((score / totalQuestions) * 100) >= 60 : false;
 
     return (
-        <div>
-            <h1>Quiz Results</h1>
-            <p>
-                You scored {score} out of {totalQuestions}.
-            </p>
+        <div className="quiz-results">
+            <div className="score-bar">
+                <div className="score-bar-fill" style={{ width: `${(score / totalQuestions) * 100}%` }}></div>
+            </div>
+            <div className="score-text">
+                <h2>Score: {score} / {totalQuestions}</h2>
+                <p>{Math.ceil((score / totalQuestions) * 100)}% correct</p>
+            </div>
 
             {error && <p style={{ color: 'red' }}>{error}</p>}
 
             {incorrectAnswers.length > 0 ? (
-                <>
-                    <h3>Review Incorrect Answers</h3>
+                <div className="questions-to-review">
+                    <h3>Questions to Review ({incorrectAnswers.length})</h3>
                     {incorrectAnswers.map((question, index) => (
-                        <div key={index} style={{ marginBottom: '20px' }}>
-                            <h3>Question: {question.questionText}</h3>
-                            <h3>Options:</h3>
-                            <h4>
-                                {question.answerOptions.map((option, idx) => (
-                                    <li
-                                        key={idx}
-                                        style={{
-                                            color:
-                                                option.answerText === question.correctAnswer
-                                                    ? 'green'
-                                                    : option.answerText === question.selectedAnswer
-                                                        ? 'red'
-                                                        : 'white',
-                                        }}
-                                    >
-                                        {option.answerText}
-                                    </li>
-                                ))}
-                            </h4>
-                            <p>
-                                <strong>Your Answer:</strong> {question.selectedAnswer}
-                            </p>
-                            <p>
-                                <strong>Correct Answer:</strong> {question.correctAnswer}
-                            </p>
+                        <div key={index} className="question">
+                            <h4>{question.questionText}</h4>
+                            {question.answerOptions.map((option, idx) => (
+                                <div
+                                    key={idx}
+                                    className={`answer ${option.answerText === question.correctAnswer ? 'correct' : option.answerText === question.selectedAnswer ? 'incorrect' : ''}`}
+                                >
+                                    {option.answerText}
+                                    {option.answerText === question.correctAnswer && <span>Correct answer</span>}
+                                    {option.answerText === question.selectedAnswer && <span>Your answer</span>}
+                                </div>
+                            ))}
                             <button
+                                className="view-explanation"
                                 onClick={() => handleViewExplanation(index, question)}
                                 disabled={loadingIndex === index}
                             >
                                 {loadingIndex === index ? "Loading..." : "View Explanation"}
                             </button>
                             {explanations[index] && (
-                                <div style={{ margin: '20px', color: 'white', borderRadius: "1px", borderColor: "white" }}>
-                                    <h4>Explanation:</h4> {explanations[index]}
-                                </div>
+                                <div className="explanation" dangerouslySetInnerHTML={{ __html: explanations[index] }} />
                             )}
                         </div>
                     ))}
                     <p>We recommend you to kindly study the subtopics of this chapter again for better understanding.</p>
-                </>
+                </div>
             ) : (
                 <p>Great job! You got all questions correct.</p>
             )}

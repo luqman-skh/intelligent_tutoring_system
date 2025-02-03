@@ -125,7 +125,7 @@ const Navbar = () => {
 
     return (
         <div>
-            <nav className="navbar navbar-expand-lg bg-body-tertiary" data-bs-theme="light">
+            <nav className="navbar navbar-expand-lg bg-body-tertiary navbar-olive-green" data-bs-theme="dark">
 
                 <div className="container-fluid">
                     <Link className="navbar-brand" to="/">Intelligent Tutoring System</Link>

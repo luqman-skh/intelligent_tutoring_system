@@ -7,7 +7,7 @@ import axios from "axios";
 import { UserContext } from './Firebase/UserContext'; // Import UserContext
 
 const Quiz = () => {
-    const ASK_API_URL = "https://e1a4-34-124-165-147.ngrok-free.app/fitness_calculation";
+    const QUIZ_API_URL = `${process.env.REACT_APP_BACKEND_API_KEY}/fitness_calculation`;
     const location = useLocation();
     const navigate = useNavigate(); // Use navigate to pass data to Result.js
     const { lessonId } = location.state || {};
@@ -31,7 +31,7 @@ const Quiz = () => {
             setLoadingAsk(true);
             try {
                 const response = await axios.post(
-                    ASK_API_URL,
+                    QUIZ_API_URL,
                     { user_id: user.uid }, // Use user.uid from context
                     { headers: { "Content-Type": "application/json" } }
                 );
