@@ -1,171 +1,152 @@
-import React, { useState, useEffect } from 'react';
-import { collection, doc, getDocs, query, where, updateDoc } from 'firebase/firestore';
-import { db } from './FirebaseDB';
-import { getDoc } from 'firebase/firestore';
+import React, { useState, useEffect, useContext } from 'react';
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
+import { db } from './Firebase/FirebaseDB';
 import './Quiz.css';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import axios from "axios";
+import { UserContext } from './Firebase/UserContext'; // Import UserContext
 
 const Quiz = () => {
-
-    const ASK_API_URL = "https://aa57-34-125-57-70.ngrok-free.app/fitness_calculation";
+    const QUIZ_API_URL = `${process.env.REACT_APP_BACKEND_API_KEY}/fitness_calculation`;
     const location = useLocation();
+    const navigate = useNavigate(); // Use navigate to pass data to Result.js
     const { lessonId } = location.state || {};
+    const user = useContext(UserContext); // Get the user from context
 
     const [loadingAsk, setLoadingAsk] = useState(false);
     const [errorAsk, setErrorAsk] = useState("");
-    const [askResponse, setAskResponse] = useState("");
-    const [question, setQuestion] = useState("");
     const [questions, setQuestions] = useState([]);
     const [currentQuestion, setCurrentQuestion] = useState(0);
     const [score, setScore] = useState(0);
     const [showScore, setShowScore] = useState(false);
+    const [incorrectAnswers, setIncorrectAnswers] = useState([]); // Store details of incorrect answers
+    const [difficultyDistribution, setDifficultyDistribution] = useState({});
     const [result, setResult] = useState(false);
-    const [currentSubtopicID, setCurrentSubtopicID] = useState('');
-    const [currentquestionID, setCurrentQuestionID] = useState('');
-    const [difficultyDistribution, setDifficultyDistribution] = useState({}); // Store difficulty distribution
-    
 
-    const topicId = '1'; // Hardcoded for testing purpose
-    const userId = 'Nyyvlfd2PIb9Bwv2AYq8awVP0EY2'; // Hardcoded UID for testing
-
-    // Function to handle "Ask Anything"
-    const getDifficulty = async () => {
-        setLoadingAsk(true);
-        setErrorAsk("");
-        setAskResponse("");
-        console.log("Calling API..."); 
-        try {
-            const response = await axios.post(
-                ASK_API_URL,
-                { user_id : "Nyyvlfd2PIb9Bwv2AYq8awVP0EY2"},
-                {
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                }
-            );
-            console.log("API Response: ", response);
-            console.log(response.data)
-            if (response.data ) {
-                setAskResponse(response.data);
-                console.log(response.data.difficulty_distribution)
-
-                // Assuming the response contains difficulty distribution like: { easy: 2, medium: 1, difficult: 0 }
-                setDifficultyDistribution(response.data.difficulty_distribution);
-            } else {
-                setErrorAsk("Unexpected response structure from the server.");
-            }
-        } catch (err) {
-            console.error("Error asking question:", err.response || err.message);
-            setErrorAsk("Failed to fetch answer. Please try again.");
-        } finally {
-            setLoadingAsk(false);
-        }
-    };
+    const topicId = lessonId?.toString(); // Convert lessonId to string
 
     useEffect(() => {
-        // Call the getDifficulty API to fetch the difficulty distribution
+        const getDifficulty = async () => {
+            if (!user) return; // Skip if no user is logged in
+            setLoadingAsk(true);
+            try {
+                const response = await axios.post(
+                    QUIZ_API_URL,
+                    { user_id: user.uid }, // Use user.uid from context
+                    { headers: { "Content-Type": "application/json" } }
+                );
+                if (response.data && response.data.difficulty_distribution) {
+                    setDifficultyDistribution(response.data.difficulty_distribution);
+                } else {
+                    setErrorAsk("Unexpected response structure from the server.");
+                }
+            } catch (err) {
+                console.error("Error fetching difficulty distribution:", err.message);
+                setErrorAsk("Failed to fetch difficulty distribution. Please try again.");
+            } finally {
+                setLoadingAsk(false);
+            }
+        };
+
         getDifficulty();
-    }, []);
-
-
+    }, [user]);
 
     useEffect(() => {
         const fetchQuestions = async () => {
+            if (!topicId || !difficultyDistribution) return;
+
             const questionsArray = [];
             const docRef = doc(db, 'quizzes', topicId);
             const docSnap = await getDoc(docRef);
 
             if (docSnap.exists()) {
-                const quizData = docSnap.data(); // Get the data
-                // console.log(quizData);
+                const quizData = docSnap.data();
                 const keyArray = Object.keys(quizData);
-                setCurrentSubtopicID(keyArray[0]); // Store the first subtopic
 
-                // Iterate through subtopics
                 Object.entries(quizData).forEach(([subtopicID, subtopic]) => {
-                    // For each subtopic, check the different difficulties
                     ['easy', 'medium', 'difficult'].forEach((difficulty) => {
                         if (subtopic[difficulty]) {
-                            const questionIDs = Object.keys(subtopic[difficulty]); // Get all question IDs
-                            if (questionIDs.length > 0) {
-                                // Shuffle the questions randomly
-                                const shuffledQuestions = shuffleArray(questionIDs);
-
-                                // Use the difficulty distribution to limit the number of questions
-                                const numQuestionsToPick = difficultyDistribution[difficulty] || 0;
-                                const questionsToSelect = shuffledQuestions.slice(0, numQuestionsToPick);
-                                console.log(difficultyDistribution)
-                                questionsToSelect.forEach((questionID) => {
-                                    const questionObj = subtopic[difficulty][questionID];
-                                    questionsArray.push({
-                                        questionID, // Store the questionID for later reference
-                                        questionText: questionObj.question,
-                                        answerOptions: questionObj.options.map((option, index) => ({
-                                            answerText: option,
-                                            isCorrect: index.toString() === questionObj.correctAnswer, // Check if the index matches the correctAnswer
-                                        })),
-                                    });
+                            const questionIDs = Object.keys(subtopic[difficulty]);
+                            const shuffledQuestions = shuffleArray(questionIDs);
+                            const numQuestionsToPick = difficultyDistribution[difficulty] || 0;
+                            shuffledQuestions.slice(0, numQuestionsToPick).forEach((questionID) => {
+                                const questionObj = subtopic[difficulty][questionID];
+                                questionsArray.push({
+                                    questionID,
+                                    questionText: questionObj.question,
+                                    correctAnswer: questionObj.options[questionObj.correctAnswer],
+                                    answerOptions: questionObj.options.map((option, index) => ({
+                                        answerText: option,
+                                        isCorrect: index.toString() === questionObj.correctAnswer,
+                                    })),
                                 });
-                            }
+                            });
                         }
                     });
                 });
             }
 
-            setQuestions(questionsArray); // Update state with questions array
+            setQuestions(questionsArray);
         };
 
         fetchQuestions();
-    }, [difficultyDistribution]);
+    }, [difficultyDistribution, topicId]);
 
     const shuffleArray = (array) => {
-        // Shuffle the array randomly using Fisher-Yates algorithm
         for (let i = array.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
-            [array[i], array[j]] = [array[j], array[i]]; // Swap elements
+            [array[i], array[j]] = [array[j], array[i]];
         }
         return array;
     };
 
-    const handleAnswerOptionClick = async (isCorrect) => {
+    const handleAnswerOptionClick = async (isCorrect, selectedAnswer) => {
+        if (!user) return; // Skip if no user is logged in
+    
+        const currentQ = questions[currentQuestion];
+    
         if (isCorrect) {
             setScore(score + 1);
         } else {
+            // Add the incorrectly answered question's details to the state
+            setIncorrectAnswers((prev) => [
+                ...prev,
+                {
+                    questionText: currentQ.questionText,  // Question text
+                    answerOptions: currentQ.answerOptions, // All options
+                    selectedAnswer, // The answer selected by the user
+                    correctAnswer: currentQ.correctAnswer, // The correct answer
+                },
+            ]);
+    
+            const userDocRef = doc(db, 'users', user.uid);
             try {
-                const userDocRef = doc(db, 'users', userId);
-
-                // Add the failed questionId to Firestore
-                console.log(currentquestionID);
                 await updateDoc(userDocRef, {
-                    [`progress.${topicId}.${currentSubtopicID}.failedQuestions`]: [
+                    [`progress.${topicId}.failedQuestions`]: [
                         ...(
-                            (await getDoc(userDocRef)).data()?.progress?.[topicId]?.[currentSubtopicID]?.failedQuestions || []
+                            (await getDoc(userDocRef)).data()?.progress?.[topicId]?.failedQuestions || []
                         ),
-                        currentquestionID
+                        currentQ.questionID,
                     ],
                 });
-
-                console.log(`Question ${currentquestionID} added to failedQuestions.`);
             } catch (error) {
-                console.error('Error updating failedQuestions: ', error);
+                console.error('Error updating failedQuestions:', error);
             }
         }
-
+    
         const nextQuestion = currentQuestion + 1;
         if (nextQuestion < questions.length) {
             setCurrentQuestion(nextQuestion);
-            setCurrentQuestionID(questions[nextQuestion]?.questionID); // Update to the next question ID
         } else {
             setShowScore(true);
             saveQuizScore(score + (isCorrect ? 1 : 0)); // Include the last correct answer in the score
         }
     };
+    
 
     const saveQuizScore = async (finalScore) => {
         try {
-            const userDocRef = doc(db, 'users', userId);
+            const userDocRef = doc(db, 'users', user.uid);
             var score = (finalScore / 5) * 100;
             const passingScore = 60; // Set your passing score threshold here
             setResult(score >= 60 ? true : false);
@@ -182,27 +163,35 @@ const Quiz = () => {
         }
     };
 
+
+
+    const handleFinishQuiz = () => {
+        navigate('/result', {
+            state: {
+                incorrectAnswers,
+                score,
+                totalQuestions: questions.length,
+                questions,
+                lessonId, // Pass lessonId to the result page
+            },
+        });
+    };
+    
+
     return (
         <div className="quiz-container">
-            {console.log("Taking quiz for chaper :" + lessonId)}
             {showScore ? (
                 <div>
                     <div className="score-section">
                         You scored {score} out of {questions.length}
                     </div>
-                    <div className="feedback">
-                        {result ? (
-                            <div>Congratulations! You can proceed to the next topic!</div>
-                        ) : (
-                            <div>We recommend you revise these topics again.</div>
-                        )}
-                    </div>
+                    <button onClick={handleFinishQuiz}>See Result</button>
                 </div>
             ) : (
                 <div>
                     <div className="question-section">
                         <div className="question-count">
-                            <span>Question {currentQuestion + 1}</span>/{questions.length}
+                            Question {currentQuestion + 1}/{questions.length}
                         </div>
                         <div className="question-text">{questions[currentQuestion]?.questionText}</div>
                     </div>
@@ -211,7 +200,9 @@ const Quiz = () => {
                             <button
                                 key={index}
                                 className="answer-button"
-                                onClick={() => handleAnswerOptionClick(answerOption.isCorrect)}
+                                onClick={() =>
+                                    handleAnswerOptionClick(answerOption.isCorrect, answerOption.answerText)
+                                }
                             >
                                 {answerOption.answerText}
                             </button>

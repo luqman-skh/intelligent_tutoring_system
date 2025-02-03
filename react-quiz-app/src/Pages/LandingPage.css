@@ -1,0 +1,74 @@
+/* LandingPage.css */
+body {
+  font-family: Arial, sans-serif;
+}
+
+.hero img {
+  max-width: 30%;
+  height: auto;
+  margin-left: 100px;
+}
+
+.btn-primary {
+  background-color: #71d8fb;
+  border-color: #71d8fb;
+}
+
+
+.btn-primary:hover {
+  background-color: #0056b3;
+  border-color: #0056b3;
+}
+
+/* Fade Effects */
+.fade-section {
+  opacity: 0;
+  transition: opacity 1s ease-in-out;
+}
+
+.fade-section.active {
+  opacity: 1;
+}
+
+/* section {
+  padding: 100px 0;
+} */
+
+
+.features-section {
+  background-color: #fff; /* SteelBlue color */
+}
+
+.features-section h2 {
+  font-weight: bold;
+  color: #333;
+  }
+
+.features-section h3 {
+  font-size: 1.5rem;
+  color: #000;
+  }
+  
+  .features-section p {
+  color: black;
+}
+
+
+.ignite-passion-section h2 {
+  font-weight: bold;
+  color: black;
+}
+
+.ignite-passion-section p {
+  color: black;
+}
+
+.ignite-passion-section .btn-primary {
+  background-color: #71d8fb;
+  border-color: #71d8fb;
+}
+
+.ignite-passion-section .btn-primary:hover {
+  background-color: #0056b3;
+  border-color: #0056b3;
+}

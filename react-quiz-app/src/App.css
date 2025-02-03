@@ -6,46 +6,37 @@
   height: 100%; /* Full height to ensure the sidebar sticks to the side */
 }
 
-/* Sidebar styling */
-/* .sidebar {
-  width: 250px;
-  background-color: #f4f4f4; */
-  /*height: 100vh; /* Make sidebar take full height */
-  /*position: fixed; /* Fix sidebar to the left side */
-  /* top: 0;
-  left: 0;
-  padding: 20px;
-  box-sizing: border-box;
-  color: black
-} */
 
 .chat-box-holder {
   padding: 15px;
+  background-color: #eff6ff;
   width: 80%;
   position: fixed; /* Fix the container to the bottom */
   bottom: 0; /* Align it to the bottom of the screen */
   left: 270px; /* Account for the sidebar width */
   right: 120px; /* Extend it to the right edge */
-  background-color: #282c34; /* Optional background color */
   box-sizing: border-box; /* Ensure padding doesn't affect width */
 }
 
+
+
 .chat-input-textarea {
-  background-color: #40414f;
+  /* background-color: #40414f; */
+  background-color: #eff6ff;
   width: 90%;
   border-radius: 5px;
-  border: none;
-  border-color: none;
+  border: "1px";
+  border-color: black;
   padding: 10px; /* Add padding for better usability */
   margin-right: 10px;
-  color: white; /* Adjust text color for better visibility */
+  color: black; /* Adjust text color for better visibility */
   resize:none; /* Prevent resizing */
   height: 70px; /* Set a fixed height */
 }
 
 .chat-log {
   flex-grow: 1; /* Take remaining space */
-  color: white;
+  color: black;
   box-sizing: border-box; /* Ensure padding doesn't affect width */
   width: 100%; /* Full width */
   height: 70%;
@@ -68,7 +59,6 @@
 
 
 .text-container {
-  overflow-y: auto; /* Enables vertical scrolling for large text */
   max-height: 400px; /* Set a maximum height for the text container */
   padding-left: 70px; /* Ensure text doesn't overlap the avatar */
 }
@@ -100,8 +90,8 @@
 }
 /* Header styling */
 .App-header {
-  background-color: #282c34;
-  color: white;
+  background-color: #eff6ff;
+  color: black;
   min-height: 100vh;
   padding: 10px;
   /* padding-left: 270px; */
@@ -113,10 +103,11 @@
 }
 
 .Main {
-  background-color: #282c34;
-  color: white;
+  background-color: #eff6ff;
+  color: black;
   padding: 20px;
   padding-left: 270px;
+  
   text-align: left;
   width: 100%; /* Full width */
   height: fit-content(100px);
@@ -125,14 +116,14 @@
 
 /* Button styling */
 button {
-  background-color: #61dafb;
+  background-color: #71d8fb;
   color: black;
   border: none;
   padding: 10px 20px;
   margin: 20px;
   font-size: 16px;
   cursor: pointer;
-  border-radius: 5px;
+  border-radius: 10px;
 }
 
 button:disabled {

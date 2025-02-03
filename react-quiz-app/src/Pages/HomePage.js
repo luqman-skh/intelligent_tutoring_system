@@ -17,7 +17,6 @@ function HomePage() {
             <QuizGenerator />
             <AskAnything />
             <LessonOverview/>
-            <h3 onClick={handleClick}>Take Quiz</h3>
         </div>
     )
 }

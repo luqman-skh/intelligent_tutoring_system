@@ -30,6 +30,12 @@
 
   .take-quiz {
     border-radius: 5px;
+    background-color: #0056b3;
+    color: white;
+  }
+  .take-quiz:hover {
+    border-radius: 5px;
+    background-color: #062b52;
   }
   
   /* Navigation list items */
